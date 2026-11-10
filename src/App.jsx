@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-
+// ====== BURANI DƏYİŞ ======
 const phoneText = "Nomre";
 const instagram = "https://www.instagram.com/pizza.cano?srtk=OTc2ZnEwaW4xbjJo";
 const address = "unvan";
+// ==========================
 
-
-const u = (id) => `https://images.unsplash.com/${id}?w=600`;
+const u = (id) => `https://images.unsplash.com/${id}?w=600&auto=format&fit=crop`;
 
 const categories = [
   { id: "pizza", name: "Pizzalar", emoji: "🍕" },
@@ -22,27 +22,27 @@ const sizes = (a, b, c) => [
 ];
 
 const foods = [
-//pizzalar
-  { id: "p1", cat: "pizza", name: "Margherita", description: "Mozzarella, pomidor sousu", options: sizes(8, 12, 16), image: u("photo-1579751626657-72bc17010498") },
-  { id: "p2", cat: "pizza", name: "Pepperoni", description: "Pepperoni, mozzarella, sous", options: sizes(10, 14, 18), image: u("photo-1628840042765-356cda07504e") },
-  { id: "p3", cat: "pizza", name: "Cheese Pizza", description: "Bol pendir və xüsusi sous", options: sizes(10, 14, 18), image: u("photo-1513104890138-7c749659a591") },
-  { id: "p4", cat: "pizza", name: "Special Pizza", description: "Aşpazın xüsusi resepti", options: sizes(12, 17, 22), image: u("photo-1534308983496-4fabb1a015ee") },
-  { id: "p5", cat: "pizza", name: "Toyuqlu pizza", description: "Toyuq, pendir, bibər, pomidor", options: sizes(9, 13, 17), image: u("photo-1565299624946-b28f40a0ae38") },
+  // PİZZALAR
+  { id: "p1", cat: "pizza", name: "Margherita", description: "Mozzarella, pomidor sousu", options: sizes(8, 12, 16), image: u("photo-1604382354936-07c5d9983bd3") },
+  { id: "p2", cat: "pizza", name: "Pepperoni", description: "Pepperoni, mozzarella, sous", options: sizes(10, 14, 18), image: "https://plus.unsplash.com/premium_photo-1733259709671-9dbf22bf02cc?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D" },
+  { id: "p3", cat: "pizza", name: "Cheese Pizza", description: "Bol pendir və xüsusi sous", options: sizes(10, 14, 18), image: "https://images.unsplash.com/photo-1732223229355-95a1433404bf?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D" },
+  { id: "p4", cat: "pizza", name: "Special Pizza", description: "Aşpazın xüsusi resepti", options: sizes(12, 17, 22), image: "https://plus.unsplash.com/premium_photo-1661762555601-47d088a26b50?q=80&w=1192&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D" },
+  { id: "p5", cat: "pizza", name: "Toyuqlu pizza", description: "Toyuq, pendir, bibər, pomidor", options: sizes(9, 13, 17), image: "https://thealburooj.com/wp-content/uploads/2026/02/Special-Pizza.png" },
 
-  //  burgerlər
+  // BURGERLƏR
   { id: "b1", cat: "burger", name: "Hamburger", description: "Mal əti kotleti, kahı, pomidor, sous", options: [{ label: "", price: 5 }], image: u("photo-1568901346375-23c9450c58cd") },
-  { id: "b2", cat: "burger", name: "Cheeseburger", description: "Kotlet, çedar pendiri, turşu, sous", options: [{ label: "", price: 6 }], image: u("photo-1550547660-d9450f859349") },
+  { id: "b2", cat: "burger", name: "Cheeseburger", description: "Kotlet, çedar pendiri, turşu, sous", options: [{ label: "", price: 6 }], image: u("photo-1572802419224-296b0aeee0d9") },
   { id: "b3", cat: "burger", name: "Chicken burger", description: "Çıtır toyuq filesi, kahı, mayonez", options: [{ label: "", price: 5.5 }], image: u("photo-1606755962773-d324e0a13086") },
-  { id: "b4", cat: "burger", name: "Double burger", description: "İki kotlet, ikiqat pendir", options: [{ label: "", price: 9 }], image: u("photo-1553979459-d2229ba7433b") },
-  { id: "b5", cat: "burger", name: "Cano burger", description: "Evin xüsusi burgeri, fri ilə birlikdə", options: [{ label: "", price: 11 }], image: u("photo-1571091718767-18b5b1457add") },
+  { id: "b4", cat: "burger", name: "Double burger", description: "İki kotlet, ikiqat pendir", options: [{ label: "", price: 9 }], image: u("photo-1586190848861-99aa4a171e90") },
+  { id: "b5", cat: "burger", name: "Cano burger", description: "Evin xüsusi burgeri, fri ilə birlikdə", options: [{ label: "", price: 11 }], image: u("photo-1550547660-d9450f859349") },
 
-  // naggetslər
+  // NAGGETSLƏR
   { id: "n1", cat: "nuggets", name: "Naggets", description: "Çıtır toyuq parçaları", options: [{ label: "6 ədəd", price: 4.5 }, { label: "9 ədəd", price: 6.5 }, { label: "12 ədəd", price: 8.5 }], image: u("photo-1562967914-608f82629710") },
   { id: "n2", cat: "nuggets", name: "Toyuq strips", description: "Zolaq şəklində çıtır toyuq", options: [{ label: "5 ədəd", price: 6 }, { label: "8 ədəd", price: 9 }], image: u("photo-1626645738196-c2a7c87a8f58") },
   { id: "n3", cat: "nuggets", name: "Kartof fri", description: "Qızarmış çıtır kartof", options: [{ label: "Kiçik", price: 2.5 }, { label: "Böyük", price: 4 }], image: u("photo-1573080496219-bb080dd4f877") },
   { id: "n4", cat: "nuggets", name: "Naggets + fri kombo", description: "9 naggets, kiçik fri, sous", options: [{ label: "", price: 8 }], image: u("photo-1585109649139-366815a0d713") },
 
-  // içkilər
+  // İÇKİLƏR
   { id: "d1", cat: "drinks", name: "Coca-Cola", description: "Soyuq qazlı içki", options: [{ label: "0.5 l", price: 2 }, { label: "1 l", price: 3 }], image: u("photo-1622483767028-3f66f32aef97") },
   { id: "d2", cat: "drinks", name: "Fanta", description: "Portağal dadlı qazlı içki", options: [{ label: "0.5 l", price: 2 }, { label: "1 l", price: 3 }], image: u("photo-1624517452488-04869289c4ca") },
   { id: "d3", cat: "drinks", name: "Ayran", description: "Soyuq, təbii ayran", options: [{ label: "", price: 1.5 }], image: "", emoji: "🥛" },
@@ -54,64 +54,135 @@ const fmt = (n) => (Number.isInteger(n) ? n : n.toFixed(2));
 
 function FoodImage({ food, emoji }) {
   const [failed, setFailed] = useState(false);
-  if (failed || !food.image) {
-    return (
-      <div className="w-full h-44 bg-red-50 flex items-center justify-center text-6xl">
-        {food.emoji || emoji}
-      </div>
-    );
-  }
   return (
-    <img
-      src={food.image}
-      alt={food.name}
-      onError={() => setFailed(true)}
-      className="w-full h-44 object-cover"
-    />
+    <div className="mx-auto mb-3 flex h-32 w-32 items-center justify-center overflow-hidden rounded-full bg-orange-100">
+      {failed || !food.image ? (
+        <span className="text-6xl" aria-hidden="true">{food.emoji || emoji}</span>
+      ) : (
+        <img
+          src={food.image}
+          alt={food.name}
+          loading="lazy"
+          onError={() => setFailed(true)}
+          className="h-full w-full object-cover"
+        />
+      )}
+    </div>
+  );
+}
+
+function FoodCard({ food, emoji }) {
+  const [sel, setSel] = useState(0);
+  const multi = food.options.length > 1;
+
+  return (
+    <div className="flex flex-col rounded-3xl border-2 border-orange-100 bg-white p-5">
+      <FoodImage food={food} emoji={emoji} />
+      <h3 className="text-xl font-black">{food.name}</h3>
+      <p className="mb-4 mt-1 text-sm text-gray-500">{food.description}</p>
+
+      <div className="mt-auto">
+        {multi && (
+          <div className="mb-3 flex flex-wrap gap-2">
+            {food.options.map((o, i) => (
+              <button
+                key={o.label}
+                type="button"
+                aria-pressed={sel === i}
+                onClick={() => setSel(i)}
+                className={`rounded-full border-2 px-3 py-1 text-sm font-bold transition ${
+                  sel === i
+                    ? "border-gray-900 bg-gray-900 text-white"
+                    : "border-orange-100 bg-orange-50 text-gray-800 hover:border-gray-900"
+                }`}
+              >
+                {o.label}
+              </button>
+            ))}
+          </div>
+        )}
+        <div className="text-3xl font-black text-red-600">
+          {fmt(food.options[sel].price)}
+          <span className="ml-1 text-base font-extrabold">AZN</span>
+        </div>
+      </div>
+    </div>
   );
 }
 
 function App() {
   const [activeCat, setActiveCat] = useState("pizza");
 
-  const visible = foods.filter((f) => f.cat === activeCat);
-  const currentCat = categories.find((c) => c.id === activeCat);
+  // Aşağı sürüşdürəndə aktiv kateqoriyanı işıqlandır
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) setActiveCat(e.target.id);
+        });
+      },
+      { rootMargin: "-30% 0px -60% 0px" }
+    );
+    categories.forEach((c) => {
+      const el = document.getElementById(c.id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, []);
+
+  const goTo = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const phoneHref = `tel:${phoneText.replace(/[^\d+]/g, "")}`;
+  const hasPhone = /\d{5,}/.test(phoneText);
 
   return (
-    <div className="min-h-screen bg-white text-gray-900">
-      <header className="bg-red-600 text-white px-6 pt-8 pb-7 text-center">
-        <h1 className="text-4xl font-black tracking-tight">PIZZA CANO</h1>
-        <p className="mt-2 text-red-100">Təzə, isti, sürətli.</p>
+    <div className="min-h-screen bg-orange-50 font-sans text-gray-900">
+      {/* Üst zolaq */}
+      <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-1 bg-red-600 px-5 py-2 text-sm font-bold text-white">
+        <span>📍 {address}</span>
+        <span className="flex gap-4">
+          {hasPhone ? <a href={phoneHref}>📞 {phoneText}</a> : <span>📞 {phoneText}</span>}
+          <a href={instagram} target="_blank" rel="noreferrer">📷 Instagram</a>
+        </span>
+      </div>
 
-        <div className="flex flex-wrap justify-center gap-3 mt-5 text-sm font-bold">
-          <a
-            href={`tel:${phoneText.replace(/\s/g, "")}`}
-            className="bg-white text-red-600 px-4 py-2 rounded-full"
-          >
-            📞 {phoneText}
-          </a>
-          <a
-            href={instagram}
-            target="_blank"
-            rel="noreferrer"
-            className="bg-white text-red-600 px-4 py-2 rounded-full"
-          >
-            📷 Instagram
-          </a>
-        </div>
-        <p className="mt-4 text-sm text-red-100">📍 {address}</p>
+      {/* Hero */}
+      <header className="bg-red-600 px-5 pb-14 pt-8 text-center text-white">
+        <h1 className="text-5xl font-black leading-none tracking-tight sm:text-7xl">Pizza Cano</h1>
+        <p className="mx-auto mb-6 mt-3 max-w-xs text-lg">
+          Təzə, isti, sürətli. Zəng et, sifarişini deyək, qapına gətirək.
+        </p>
+        <button
+          type="button"
+          onClick={() => goTo("pizza")}
+          className="rounded-full bg-amber-300 px-7 py-3 font-black text-gray-900 hover:bg-amber-200"
+        >
+          Menyuya bax
+        </button>
       </header>
+      <svg
+        viewBox="0 0 100 10"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+        className="-mt-7 block h-7 w-full text-orange-50"
+      >
+        <path d="M0 10 Q 12.5 0 25 6 T 50 6 T 75 6 T 100 4 V10Z" fill="currentColor" />
+      </svg>
 
-      <nav className="sticky top-0 z-20 bg-white border-b-2 border-red-100">
-        <div className="flex gap-2 overflow-x-auto px-4 py-3 max-w-6xl mx-auto">
+      {/* Kateqoriya paneli */}
+      <nav aria-label="Kateqoriyalar" className="sticky top-0 z-20 border-b-2 border-orange-100 bg-orange-50">
+        <div className="mx-auto flex max-w-6xl gap-2 overflow-x-auto px-4 py-3">
           {categories.map((c) => (
             <button
               key={c.id}
-              onClick={() => setActiveCat(c.id)}
-              className={`shrink-0 px-5 py-2 rounded-full font-bold border-2 transition ${
+              type="button"
+              onClick={() => goTo(c.id)}
+              className={`shrink-0 rounded-full border-2 px-5 py-2 font-extrabold transition ${
                 activeCat === c.id
-                  ? "bg-red-600 border-red-600 text-white"
-                  : "bg-white border-red-100 text-red-600 hover:border-red-600"
+                  ? "border-red-600 bg-red-600 text-white"
+                  : "border-orange-100 bg-white hover:border-red-600"
               }`}
             >
               {c.emoji} {c.name}
@@ -120,47 +191,37 @@ function App() {
         </div>
       </nav>
 
-      <section className="max-w-6xl mx-auto px-6 py-10">
-        <h2 className="text-3xl font-black mb-8">
-          {currentCat.emoji} {currentCat.name}
-        </h2>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {visible.map((food) => (
-            <div
-              key={food.id}
-              className="bg-white rounded-2xl overflow-hidden border-2 border-red-100 flex flex-col"
-            >
-              <FoodImage food={food} emoji={currentCat.emoji} />
-
-              <div className="p-5 flex flex-col flex-1">
-                <h3 className="text-xl font-bold">{food.name}</h3>
-                <p className="text-gray-500 text-sm mt-1">{food.description}</p>
-
-                <div className="mt-auto pt-5 space-y-1">
-                  {food.options.map((o) => (
-                    <div
-                      key={o.label}
-                      className="flex justify-between items-center"
-                    >
-                      <span className="text-gray-700">{o.label}</span>
-                      <span className="text-red-600 text-lg font-black">
-                        {fmt(o.price)} AZN
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+      {/* Menyu */}
+      <main className="mx-auto max-w-6xl px-4 pb-10">
+        {categories.map((c) => (
+          <section key={c.id} id={c.id} className="scroll-mt-20 pt-8">
+            <h2 className="mb-5 text-3xl font-black">
+              {c.emoji} {c.name}
+            </h2>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {foods
+                .filter((f) => f.cat === c.id)
+                .map((f) => (
+                  <FoodCard key={f.id} food={f} emoji={c.emoji} />
+                ))}
             </div>
-          ))}
-        </div>
-      </section>
+          </section>
+        ))}
 
-      <footer className="text-center py-8 bg-red-600 text-white">
-        <h2 className="font-black text-xl">PIZZA CANO</h2>
-        <p className="mt-2 text-red-100">
-          © 2026 Pizza Cano. Bütün hüquqlar qorunur.
-        </p>
+        <div className="mt-10 rounded-3xl border-2 border-orange-100 bg-white p-6">
+          <h2 className="mb-3 text-2xl font-black">Sifariş necə verilir</h2>
+          <ul className="list-disc space-y-1 pl-5 text-gray-600">
+            <li>Yuxarıdakı nömrəyə zəng edin, seçdiyiniz yeməkləri və ünvanı deyin.</li>
+            <li>Sifarişiniz təzə hazırlanıb isti çatdırılır.</li>
+            <li>Qiymətlər manatladır (AZN).</li>
+          </ul>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-red-600 px-4 py-8 text-center text-white">
+        <h2 className="text-2xl font-black">Pizza Cano</h2>
+        <p className="mt-2 text-red-100">© 2026 Pizza Cano. Bütün hüquqlar qorunur.</p>
       </footer>
     </div>
   );
