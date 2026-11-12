@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
 
-// ====== BURANI DƏYİŞ ======
-const phoneText = "Nomre";
+const phoneText = "+994 070 366 99 00";
 const instagram = "https://www.instagram.com/pizza.cano?srtk=OTc2ZnEwaW4xbjJo";
 const address = "unvan";
-// ==========================
-
+const whatsappNumber = "9940703669900";
 const u = (id) => `https://images.unsplash.com/${id}?w=600&auto=format&fit=crop`;
 
 const categories = [
@@ -22,27 +20,21 @@ const sizes = (a, b, c) => [
 ];
 
 const foods = [
-  // PİZZALAR
   { id: "p1", cat: "pizza", name: "Margherita", description: "Mozzarella, pomidor sousu", options: sizes(8, 12, 16), image: u("photo-1604382354936-07c5d9983bd3") },
   { id: "p2", cat: "pizza", name: "Pepperoni", description: "Pepperoni, mozzarella, sous", options: sizes(10, 14, 18), image: "https://plus.unsplash.com/premium_photo-1733259709671-9dbf22bf02cc?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D" },
   { id: "p3", cat: "pizza", name: "Cheese Pizza", description: "Bol pendir və xüsusi sous", options: sizes(10, 14, 18), image: "https://images.unsplash.com/photo-1732223229355-95a1433404bf?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D" },
- 
   { id: "p5", cat: "pizza", name: "Toyuqlu pizza", description: "Toyuq, pendir, bibər, pomidor", options: sizes(9, 13, 17), image: "https://thealburooj.com/wp-content/uploads/2026/02/Special-Pizza.png" },
 
-  // BURGERLƏR
   { id: "b1", cat: "burger", name: "Hamburger", description: "Mal əti kotleti, kahı, pomidor, sous", options: [{ label: "", price: 5 }], image: u("photo-1568901346375-23c9450c58cd") },
   { id: "b2", cat: "burger", name: "Cheeseburger", description: "Kotlet, çedar pendiri, turşu, sous", options: [{ label: "", price: 6 }], image: u("photo-1586190848861-99aa4a171e90") },
   { id: "b3", cat: "burger", name: "Chicken burger", description: "Çıtır toyuq filesi, kahı, mayonez", options: [{ label: "", price: 5.5 }], image: u("photo-1606755962773-d324e0a13086") },
-  { id: "b4", cat: "burger", name: "Double burger", description: "İki kotlet, ikiqat pendir", options: [{ label: "", price: 9 }], image:  u("photo-1572802419224-296b0aeee0d9") },
-  
+  { id: "b4", cat: "burger", name: "Double burger", description: "İki kotlet, ikiqat pendir", options: [{ label: "", price: 9 }], image: u("photo-1572802419224-296b0aeee0d9") },
 
-  // NAGGETSLƏR
   { id: "n1", cat: "nuggets", name: "Naggets", description: "Çıtır toyuq parçaları", options: [{ label: "6 ədəd", price: 4.5 }, { label: "9 ədəd", price: 6.5 }, { label: "12 ədəd", price: 8.5 }], image: u("photo-1562967914-608f82629710") },
   { id: "n2", cat: "nuggets", name: "Toyuq strips", description: "Zolaq şəklində çıtır toyuq", options: [{ label: "5 ədəd", price: 6 }, { label: "8 ədəd", price: 9 }], image: u("photo-1626645738196-c2a7c87a8f58") },
   { id: "n3", cat: "nuggets", name: "Kartof fri", description: "Qızarmış çıtır kartof", options: [{ label: "Kiçik", price: 2.5 }, { label: "Böyük", price: 4 }], image: u("photo-1573080496219-bb080dd4f877") },
   { id: "n4", cat: "nuggets", name: "Naggets + fri kombo", description: "9 naggets, kiçik fri, sous", options: [{ label: "", price: 8 }], image: u("photo-1585109649139-366815a0d713") },
 
-  // İÇKİLƏR
   { id: "d1", cat: "drinks", name: "Coca-Cola", description: "Soyuq qazlı içki", options: [{ label: "0.5 l", price: 2 }, { label: "1 l", price: 3 }], image: u("photo-1622483767028-3f66f32aef97") },
   { id: "d2", cat: "drinks", name: "Fanta", description: "Portağal dadlı qazlı içki", options: [{ label: "0.5 l", price: 2 }, { label: "1 l", price: 3 }], image: u("photo-1624517452488-04869289c4ca") },
   { id: "d3", cat: "drinks", name: "Ayran", description: "Soyuq, təbii ayran", options: [{ label: "", price: 1.5 }], image: "", emoji: "🥛" },
@@ -51,6 +43,7 @@ const foods = [
 ];
 
 const fmt = (n) => (Number.isInteger(n) ? n : n.toFixed(2));
+const CART_KEY = "pizzacano-cart";
 
 function FoodImage({ food, emoji }) {
   const [failed, setFailed] = useState(false);
@@ -71,9 +64,16 @@ function FoodImage({ food, emoji }) {
   );
 }
 
-function FoodCard({ food, emoji }) {
+function FoodCard({ food, emoji, onAdd }) {
   const [sel, setSel] = useState(0);
+  const [added, setAdded] = useState(false);
   const multi = food.options.length > 1;
+
+  const add = () => {
+    onAdd(food, sel);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 900);
+  };
 
   return (
     <div className="flex flex-col rounded-3xl border-2 border-orange-100 bg-white p-5">
@@ -101,10 +101,128 @@ function FoodCard({ food, emoji }) {
             ))}
           </div>
         )}
-        <div className="text-3xl font-black text-red-600">
-          {fmt(food.options[sel].price)}
-          <span className="ml-1 text-base font-extrabold">AZN</span>
+        <div className="flex items-center justify-between gap-2">
+          <div className="text-3xl font-black text-red-600">
+            {fmt(food.options[sel].price)}
+            <span className="ml-1 text-base font-extrabold">AZN</span>
+          </div>
+          <button
+            type="button"
+            onClick={add}
+            className={`rounded-full px-4 py-2 text-sm font-black transition ${
+              added ? "bg-green-600 text-white" : "bg-red-600 text-white hover:bg-red-700"
+            }`}
+          >
+            {added ? "✓ Əlavə olundu" : "+ Səbətə"}
+          </button>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function CartDrawer({ cart, setQty, clear, onClose, total }) {
+  const [name, setName] = useState("");
+  const [addr, setAddr] = useState("");
+  const [note, setNote] = useState("");
+
+  useEffect(() => {
+    const onKey = (e) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  const waReady = /^\d{9,15}$/.test(whatsappNumber);
+  const canSend = waReady && cart.length > 0 && name.trim() && addr.trim();
+
+  const send = () => {
+    const lines = cart.map(
+      (i) => `• ${i.qty}x ${i.name}${i.label ? ` (${i.label})` : ""} - ${fmt(i.price * i.qty)} AZN`
+    );
+    const text = [
+      "Salam, Pizza Cano! Sifariş vermək istəyirəm:",
+      "",
+      ...lines,
+      "",
+      `Cəmi: ${fmt(total)} AZN`,
+      "",
+      `Ad: ${name.trim()}`,
+      `Ünvan: ${addr.trim()}`,
+      note.trim() ? `Qeyd: ${note.trim()}` : ""
+    ]
+      .filter((l, idx, arr) => l !== "" || arr[idx - 1] !== "")
+      .join("\n");
+    window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`, "_blank");
+  };
+
+  const input = "w-full rounded-xl border-2 border-orange-100 bg-orange-50 px-3 py-2 outline-none focus:border-red-600";
+
+  return (
+    <div className="fixed inset-0 z-40 flex justify-end" role="dialog" aria-modal="true" aria-label="Sifariş səbəti">
+      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
+      <div className="relative flex h-full w-full max-w-md flex-col bg-white shadow-2xl">
+        <div className="flex items-center justify-between bg-red-600 px-5 py-4 text-white">
+          <h2 className="text-xl font-black">🛒 Səbətim</h2>
+          <button type="button" onClick={onClose} aria-label="Bağla" className="text-2xl font-black leading-none">✕</button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto p-5">
+          {cart.length === 0 ? (
+            <p className="mt-10 text-center text-gray-500">Səbət boşdur. Menyudan seçim edin 🍕</p>
+          ) : (
+            <>
+              <ul className="space-y-3">
+                {cart.map((i) => (
+                  <li key={i.key} className="flex items-center gap-3 rounded-2xl border-2 border-orange-100 p-3">
+                    <div className="flex-1">
+                      <div className="font-bold">
+                        {i.name} {i.label && <span className="text-gray-500">({i.label})</span>}
+                      </div>
+                      <div className="text-sm font-black text-red-600">{fmt(i.price * i.qty)} AZN</div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button type="button" aria-label="Azalt" onClick={() => setQty(i.key, i.qty - 1)} className="h-8 w-8 rounded-full bg-orange-100 font-black">−</button>
+                      <span className="w-5 text-center font-black">{i.qty}</span>
+                      <button type="button" aria-label="Artır" onClick={() => setQty(i.key, i.qty + 1)} className="h-8 w-8 rounded-full bg-orange-100 font-black">+</button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+              <button type="button" onClick={clear} className="mt-3 text-sm font-bold text-gray-500 underline">
+                Səbəti təmizlə
+              </button>
+
+              <div className="mt-6 space-y-3">
+                <input className={input} placeholder="Adınız *" value={name} onChange={(e) => setName(e.target.value)} />
+                <input className={input} placeholder="Çatdırılma ünvanı *" value={addr} onChange={(e) => setAddr(e.target.value)} />
+                <textarea className={input} rows={2} placeholder="Qeyd (istəyə bağlı)" value={note} onChange={(e) => setNote(e.target.value)} />
+              </div>
+            </>
+          )}
+        </div>
+
+        {cart.length > 0 && (
+          <div className="border-t-2 border-orange-100 p-5">
+            <div className="mb-3 flex items-center justify-between text-xl font-black">
+              <span>Cəmi</span>
+              <span className="text-red-600">{fmt(total)} AZN</span>
+            </div>
+            <button
+              type="button"
+              disabled={!canSend}
+              onClick={send}
+              className="w-full rounded-full bg-green-600 py-3 font-black text-white disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              WhatsApp ilə sifariş et
+            </button>
+            {!waReady && (
+              <p className="mt-2 text-center text-xs text-red-600">WhatsApp nömrəsi hələ kodda yazılmayıb.</p>
+            )}
+            {waReady && !(name.trim() && addr.trim()) && (
+              <p className="mt-2 text-center text-xs text-gray-500">Ad və ünvanı yazın.</p>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -112,8 +230,39 @@ function FoodCard({ food, emoji }) {
 
 function App() {
   const [activeCat, setActiveCat] = useState("pizza");
+  const [cartOpen, setCartOpen] = useState(false);
+  const [cart, setCart] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem(CART_KEY)) || [];
+    } catch {
+      return [];
+    }
+  });
 
-  // Aşağı sürüşdürəndə aktiv kateqoriyanı işıqlandır
+  useEffect(() => {
+    try {
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    } catch {}
+  }, [cart]);
+
+  const addToCart = (food, optIdx) => {
+    const o = food.options[optIdx];
+    const key = `${food.id}-${optIdx}`;
+    setCart((prev) => {
+      const found = prev.find((i) => i.key === key);
+      if (found) return prev.map((i) => (i.key === key ? { ...i, qty: i.qty + 1 } : i));
+      return [...prev, { key, name: food.name, label: o.label, price: o.price, qty: 1 }];
+    });
+  };
+
+  const setQty = (key, qty) =>
+    setCart((prev) =>
+      qty <= 0 ? prev.filter((i) => i.key !== key) : prev.map((i) => (i.key === key ? { ...i, qty } : i))
+    );
+
+  const count = cart.reduce((s, i) => s + i.qty, 0);
+  const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -152,7 +301,7 @@ function App() {
       <header className="bg-red-600 px-5 pb-14 pt-8 text-center text-white">
         <h1 className="text-5xl font-black leading-none tracking-tight sm:text-7xl">Pizza Cano</h1>
         <p className="mx-auto mb-6 mt-3 max-w-xs text-lg">
-          Təzə, isti, sürətli. Zəng et, sifarişini deyək, qapına gətirək.
+          Təzə, isti, sürətli. Səbətə at, WhatsApp-la sifariş et, qapına gətirək.
         </p>
         <button
           type="button"
@@ -202,7 +351,7 @@ function App() {
               {foods
                 .filter((f) => f.cat === c.id)
                 .map((f) => (
-                  <FoodCard key={f.id} food={f} emoji={c.emoji} />
+                  <FoodCard key={f.id} food={f} emoji={c.emoji} onAdd={addToCart} />
                 ))}
             </div>
           </section>
@@ -211,18 +360,40 @@ function App() {
         <div className="mt-10 rounded-3xl border-2 border-orange-100 bg-white p-6">
           <h2 className="mb-3 text-2xl font-black">Sifariş necə verilir</h2>
           <ul className="list-disc space-y-1 pl-5 text-gray-600">
-            <li>Yuxarıdakı nömrəyə zəng edin, seçdiyiniz yeməkləri və ünvanı deyin.</li>
-            <li>Sifarişiniz təzə hazırlanıb isti çatdırılır.</li>
-            <li>Qiymətlər manatladır (AZN).</li>
+            <li>Sevdiyiniz məhsulları «Səbətə» düyməsi ilə əlavə edin.</li>
+            <li>Səbətdə adınızı və ünvanınızı yazın, WhatsApp ilə göndərin.</li>
+            <li>Sifarişiniz təzə hazırlanıb isti çatdırılır. Qiymətlər manatladır (AZN).</li>
           </ul>
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="bg-red-600 px-4 py-8 text-center text-white">
+      <footer className="bg-red-600 px-4 py-8 pb-24 text-center text-white">
         <h2 className="text-2xl font-black">Pizza Cano</h2>
         <p className="mt-2 text-red-100">© 2026 Pizza Cano. Bütün hüquqlar qorunur.</p>
       </footer>
+
+      {/* Üzən səbət düyməsi */}
+      {count > 0 && !cartOpen && (
+        <button
+          type="button"
+          onClick={() => setCartOpen(true)}
+          className="fixed bottom-4 left-4 right-4 z-30 flex items-center justify-between rounded-full bg-gray-900 px-6 py-4 font-black text-white shadow-xl sm:left-auto sm:right-6 sm:w-80"
+        >
+          <span>🛒 Səbət ({count})</span>
+          <span className="text-amber-300">{fmt(total)} AZN</span>
+        </button>
+      )}
+
+      {cartOpen && (
+        <CartDrawer
+          cart={cart}
+          setQty={setQty}
+          clear={() => setCart([])}
+          onClose={() => setCartOpen(false)}
+          total={total}
+        />
+      )}
     </div>
   );
 }
